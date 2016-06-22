@@ -1,0 +1,21 @@
+---
+- hosts: ops-mono-node
+  remote_user: vagrant
+  vars:
+
+  tasks:
+    - name: Install Git package
+      apt: name=git state=latest
+      sudo: yes
+ 
+    - name: set git proxy(http)
+      command: /usr/bin/git config --global http.proxy http://www-cache-nrs.si.fr.intraorange:3128
+
+    - git: repo=https://github.com/balioune/opnfv.git
+           dest=/home/vagrant/opnfv
+           version=master
+
+    - shell: /home/vagrant/opnfv/vmspace/openstack/src/xenial-mitaka/10-ovs/plugin-automation.sh  >> somelog.txt
+      args:
+           chdir: /home/vagrant/opnfv/vmspace/openstack/src/xenial-mitaka/10-ovs/
+           creates: somelog.txt
